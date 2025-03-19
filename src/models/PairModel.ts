@@ -6,7 +6,6 @@ export interface Pair {
     femaleID: mongoose.Types.ObjectId,
     smashVotes: number,
     totalVotes: number,
-    bayesianScore: number,
 }
 
 const PairSchema = new Schema<Pair>(
@@ -29,10 +28,6 @@ const PairSchema = new Schema<Pair>(
             type: Number,
             default: 0,
         },
-        bayesianScore: {
-            type: Number,
-            default: 1500
-        }
     }
 )
 

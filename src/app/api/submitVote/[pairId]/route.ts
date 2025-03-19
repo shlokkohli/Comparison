@@ -14,12 +14,12 @@ export async function POST( request: Request, { params }: { params: Promise<{ pa
         // take user input for the vote
         const { vote } = await request.json();
 
-        if(!vote){
+        if (vote !== 0 && vote !== 1) {
             return NextResponse.json(
-                { error : "Invalid vote" },
-                { status : 400 }
-            )
-        }
+              { error: "Invalid vote value, must be 0 or 1" },
+              { status: 400 }
+            );
+          }
 
         const pair = await PairModel.findById(pairId);
 
