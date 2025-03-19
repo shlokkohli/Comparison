@@ -1,10 +1,8 @@
 import PairModel from "@/models/PairModel";
 import dbConnect from "@/utils/dbConnect";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function POST( request: Request, { params }: { params: Promise<{ pairId: string }> } ) {
-
-    const { pairId } = await params;
+export async function POST(request : NextRequest) {
 
     try {
 
@@ -12,15 +10,16 @@ export async function POST( request: Request, { params }: { params: Promise<{ pa
         await dbConnect();
 
         // take user input for the vote
-        const { vote } = await request.json();
+        const { vote, pairId } = await request.json();
 
-        if (vote !== 0 && vote !== 1) {
+        if(!vote || !pairId){
             return NextResponse.json(
-              { error: "Invalid vote value, must be 0 or 1" },
-              { status: 400 }
-            );
-          }
+                { error : "Vote and pairId are required" },
+                { status : 400 }
+            )
+        }
 
+        // find the pair in the database
         const pair = await PairModel.findById(pairId);
 
         if(!pair){
@@ -30,17 +29,18 @@ export async function POST( request: Request, { params }: { params: Promise<{ pa
             )
         }
 
-        // if the pair is found, increment totalVotes
-        pair.totalVotes += vote;
+        // if the pair is found, update the vote
+        pair.smashVotes += vote;;
 
-        // if the vote is 0 or 1, update it
+        // updae the total votes also
+        pair.totalVotes = pair.totalVotes + 1;
+
         await pair.save();
 
         return NextResponse.json(
-            { message : "Vote recorded successfully" },
-            { status : 200 },
+            { message : "Vote updated successfully" },
+            { status : 200 }
         )
-        
         
     } catch (error) {
 
