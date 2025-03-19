@@ -3,6 +3,10 @@ import { Gender } from "./MaleModel";
 
 const FemaleSchema = new Schema<Gender>(
     {
+        name: {
+            type: String,
+            required: true,
+        },
         imageURL: {
             type: String,
             required: true,
