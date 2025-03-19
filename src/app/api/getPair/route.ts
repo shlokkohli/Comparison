@@ -18,8 +18,11 @@ export async function POST(){
       femaleID : randomFemale[0]._id
     })
 
+    // populate the generated pair
+    const populatedPair = await PairModel.findById(response._id).populate('maleID femaleID')
+
     return NextResponse.json(
-      { message : "Pair generated successfully", pair : response },
+      { pair : populatedPair },
       { status : 200 }
     )
     

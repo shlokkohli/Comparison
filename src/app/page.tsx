@@ -22,7 +22,7 @@ export default function Home() {
 
     try {
 
-      const response = await axios.post(`/api/submitVote/${currentPairID}`, { vote });
+      const response = await axios.post('/api/submitVote', { vote });
 
       // first submit the vote, then fetch a new pair if vote submitted successfully
       if(response.status === 200){
