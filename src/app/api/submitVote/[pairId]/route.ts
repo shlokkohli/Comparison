@@ -21,9 +21,33 @@ export async function POST( request: Request, { params }: { params: Promise<{ pa
             )
         }
 
+        const pair = await PairModel.findById(pairId);
+
+        if(!pair){
+            return NextResponse.json(
+                { error : "Pair not found" },
+                { status : 404 }
+            )
+        }
+
+        // if the pair is found, increment totalVotes
+        pair.totalVotes += vote;
+
+        // if the vote is 0 or 1, update it
+        await pair.save();
+
+        return NextResponse.json(
+            { message : "Vote recorded successfully" },
+            { status : 200 },
+        )
         
         
     } catch (error) {
+
+        return NextResponse.json(
+            { error : "Failed to update vote" },
+            { status : 500 }
+        )
         
     }
 
